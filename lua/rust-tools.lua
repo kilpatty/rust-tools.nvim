@@ -72,9 +72,7 @@ local function setup_handlers()
 	local custom_handlers = {}
 
 	if tool_opts.hover_with_actions then
-		custom_handlers["textDocument/hover"] = utils.mk_handler(
-			require("rust-tools.hover_actions").handler
-		)
+		custom_handlers["textDocument/hover"] = utils.mk_handler(require("rust-tools.hover_actions").handler)
 	end
 
 	custom_handlers["experimental/serverStatus"] = utils.mk_handler(server_status.handler)
@@ -196,6 +194,10 @@ function M.setup(opts)
 	setup_lsp()
 
 	lcommands.setup_lsp_commands()
+
+	if vim.o.filetype == "rust" then
+		M.start_standalone_if_required()
+	end
 
 	if pcall(require, "dap") then
 		rt_dap.setup_adapter()
